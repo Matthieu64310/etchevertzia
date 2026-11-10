@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etchevertzia - Family Home in the Basque Country</title>
+    <style>
+        :root {
+            --primary: #2c5e4e;
+            --primary-light: #4a8c70;
+            --secondary: #8b6f47;
+            --accent: #c4956c;
+            --light: #f5f1e8;
+            --text: #333333;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #ffffff;
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header {
+            background: linear-gradient(rgba(44, 94, 78, 0.5), rgba(44, 94, 78, 0.5)), url('front entrance_1.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        header h1 { font-size: 3.5rem; font-weight: 300; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        header p { font-size: 1.3rem; max-width: 700px; margin: -24px auto 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        nav {
+            background: var(--primary);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav .container { display: flex; justify-content: center; gap: 40px; }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.95rem;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        nav a:hover { background: rgba(255,255,255,0.2); }
+        main { padding: 60px 0; }
+        section { padding: 60px 0; border-bottom: 1px solid #eee; }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-weight: 400;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+        p { margin-bottom: 20px; font-size: 1.1rem; }
+        .address { font-weight: bold; font-size: 1.2rem; color: var(--primary); margin-top: 20px; }
+        .calendar-container { max-width: 800px; margin: 0 auto; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 30px; }
+        .calendar-title { font-size: 1.8rem; color: var(--primary); }
+        .calendar-nav { display: flex; gap: 10px; }
+        .calendar-nav button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .calendar-nav button:hover { background: var(--primary-light); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; text-align: center; }
+        .calendar-weekday {
+            font-weight: bold;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+        }
+        .calendar-day {
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            min-height: 80px;
+            border: 1px solid #ddd;
+            position: relative;
+            transition: background 0.3s;
+        }
+        .calendar-day:hover { background: #f9f9f9; }
+        .calendar-day.empty { background: transparent; border: none; }
+        .calendar-day.today { background: var(--accent); color: white; font-weight: bold; }
+        .calendar-day.has-event { background: var(--primary-light); color: white; }
+        .calendar-day-number { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; }
+        .calendar-day-events { font-size: 0.8rem; margin-top: 5px; }
+        .calendar-event {
+            background: var(--secondary);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin: 2px 0;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .gallery-grid {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            overflow-x: auto;
+            padding: 4px 4px 16px;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-light) #eee;
+        }
+        .gallery-controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .gallery-controls button {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .gallery-controls button:hover { background: var(--primary-light); }
+        .gallery-controls button:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
+        }
+        .gallery-item {
+            position: relative;
+            flex: 0 0 calc((100% - 40px) / 3);
+            scroll-snap-align: start;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            aspect-ratio: 4/3;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item::after {
+            content: '🔍';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .gallery-item:hover::after { opacity: 1; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content { position: relative; max-width: 90%; max-height: 90%; }
+        .modal-content img { max-width: 100%; max-height: 80vh; display: block; border-radius: 10px; }
+        .modal-close {
+            position: absolute;
+            top: -50px; right: 0;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .modal-close:hover { color: var(--accent); }
+        .event-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 30px auto;
+        }
+        .event-form h3 { margin-bottom: 20px; color: var(--primary); }
+        .event-form label { display: block; margin-bottom: 8px; font-weight: bold; }
+        .event-form input, .event-form textarea, .event-form select {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px; font-family: inherit; font-size: 1rem;
+        }
+        .event-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .event-form button:hover { background: var(--primary-light); }
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn:hover { background: var(--primary-light); }
+        .btn-secondary { background: var(--secondary); }
+        .btn-secondary:hover { background: var(--accent); }
+        .text-center { text-align: center; }
+        .mt-40 { margin-top: 40px; }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.5rem; }
+            header p { font-size: 1.1rem; }
+            nav .container { flex-wrap: wrap; gap: 15px; }
+            .gallery-item { flex-basis: calc((100% - 20px) / 2); }
+        }
+        @media (max-width: 520px) {
+            .gallery-item { flex-basis: 85%; }
+            .calendar-header { flex-direction: column; }
+            .calendar-title { font-size: 1.5rem; }
+            .calendar-grid { gap: 4px; }
+            .calendar-weekday { padding: 6px 2px; font-size: 0.8rem; }
+            .calendar-day { min-height: 60px; padding: 6px 2px; }
+            .calendar-event { overflow-wrap: anywhere; font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Etchevertzia</h1>
+            <p>Family Home in the Basque Country</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <a href="#welcome">Welcome</a>
+            <a href="#history">History</a>
+            <a href="#passion">Our Passions</a>
+            <a href="#calendar">Calendar</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#activities">Activities</a>
+            <a href="#practical">Practical Info</a>
+        </div>
+    </nav>
+
+    <main>
+        <section id="welcome" class="welcome-section">
+            <div class="container">
+                <h2>Welcome</h2>
+                <p>We welcome you warmly to our family home in the Basque Country. Our wish is to share with family and friends our love and vision for this special place.</p>
+            </div>
+        </section>
+
+        <section id="history" class="history-section">
+            <div class="container">
+                <h2>A bit of history...</h2>
+                <p>The house <strong>Etchevertzia</strong> ("the other house" in Basque) holds its name for being the sister house of <strong>Pascoulinea</strong> ("the house of Pascal"). Both date to around 1650 and are among the oldest houses in the Serres neighbourhood.</p>
+                <p>In 1924, François de Carbonnel acquired the farm Pascoulinea and surrounding farmland following the destruction of the family home in the <a href="https://en.wikipedia.org/wiki/Somme_(department)" target="_blank" style="color: var(--primary);">Somme</a> in 1916.</p>
+                <p>In 1997, his grandson (also François) acquired Etchevertzia with the vision to pass on this new family domain to his descendants. The grand-children and 5th generation have now implanted their roots.</p>
+            </div>
+        </section>
+
+        <section id="passion" class="passion-section">
+            <div class="container">
+                <h2>Community and nature, our passions</h2>
+                <p>Since 1980, over 1000 trees were planted with the passion to protect the local biodiversity of this 10-hectare land. The house and garden are maintained and embellished by long-lasting partnerships with local artisans.</p>
+            </div>
+        </section>
+
+        <section id="calendar" class="calendar-section">
+            <div class="container">
+                <h2>Calendar</h2>
+                <p class="text-center">Check availability and book your stay</p>
+
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="calendar-title" id="calendar-title" aria-live="polite"></div>
+                        <div class="calendar-nav">
+                            <button id="prev-month" type="button" aria-label="Previous month">← Previous</button>
+                            <button id="today-btn" type="button">Today</button>
+                            <button id="next-month" type="button" aria-label="Next month">Next →</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-grid" id="calendar-weekdays">
+                        <div class="calendar-weekday">Sun</div>
+                        <div class="calendar-weekday">Mon</div>
+                        <div class="calendar-weekday">Tue</div>
+                        <div class="calendar-weekday">Wed</div>
+                        <div class="calendar-weekday">Thu</div>
+                        <div class="calendar-weekday">Fri</div>
+                        <div class="calendar-weekday">Sat</div>
+                    </div>
+
+                    <div class="calendar-grid" id="calendar-days"></div>
+                </div>
+
+                <div class="text-center mt-40">
+                    <button class="btn btn-secondary" id="add-event-btn">Add New Event</button>
+                </div>
+
+                        <div class="event-form" id="event-form" style="display: none;">
+                            <h3>Request a booking</h3>
+                            <form id="booking-request-form">
+                                <label for="booking-name">Your name:</label>
+                                <input type="text" id="booking-name" autocomplete="name" required>
+
+                                <label for="booking-email">Your email:</label>
+                                <input type="email" id="booking-email" autocomplete="email" required>
+
+                                <label for="booking-arrival">Arrival date:</label>
+                                <input type="date" id="booking-arrival" required>
+
+                                <label for="booking-departure">Departure date:</label>
+                                <input type="date" id="booking-departure" required>
+
+                                <label for="booking-message">Message (optional):</label>
+                                <textarea id="booking-message" rows="3" placeholder="Tell us about your stay"></textarea>
+
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="submit" id="request-booking-btn">Request Booking</button>
+                                    <button type="button" id="cancel-event" class="btn btn-secondary">Cancel</button>
+                                </div>
+                                <p style="font-size: 0.9rem; color: #666; margin-top: 16px;">
+                                    Your email app will open with the request. The booking is not confirmed until we reply.
+                                </p>
+                            </form>
+                        </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="gallery-section">
+            <div class="container">
+                <h2>Pictures of the house and garden</h2>
+                <p class="text-center">Explore our beautiful property in the Basque Country</p>
+
+                <div class="gallery-controls" aria-label="Gallery navigation">
+                    <button type="button" id="gallery-prev" aria-label="Scroll to previous pictures" aria-controls="gallery-grid">&larr;</button>
+                    <button type="button" id="gallery-next" aria-label="Scroll to next pictures" aria-controls="gallery-grid">&rarr;</button>
+                </div>
+                <div class="gallery-grid" id="gallery-grid" aria-label="House and garden photos">
+                    <div class="gallery-item" onclick="openModal('driveway_1.jpeg')">
+                        <img src="driveway_1.jpeg" alt="Driveway">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('front entrance_1.jpeg')">
+                        <img src="front entrance_1.jpeg" alt="Etchevertzia Front Entrance">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('garden_1.jpeg')">
+                        <img src="garden_1.jpeg" alt="Garden and Surroundings">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('garden_3.jpeg')">
+                        <img src="garden_3.jpeg" alt="Garden">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('patio_1.jpeg')">
+                        <img src="patio_1.jpeg" alt="Patio">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('living room_1.jpeg')">
+                        <img src="living room_1.jpeg" alt="Living Room">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('dining room_1.jpeg')">
+                        <img src="dining room_1.jpeg" alt="Dining Room">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('master bedroom_1.jpeg')">
+                        <img src="master bedroom_1.jpeg" alt="Master Bedroom">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('bathroom_1.jpeg')">
+                        <img src="bathroom_1.jpeg" alt="Bathroom">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('lolo room_1.jpeg')">
+                        <img src="lolo room_1.jpeg" alt="Lolo Room">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('lobby_1.jpeg')">
+                        <img src="lobby_1.jpeg" alt="Lobby">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('living room_3.jpeg')">
+                        <img src="living room_3.jpeg" alt="Living Room">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('kitchen_1.jpeg')">
+                        <img src="kitchen_1.jpeg" alt="Kitchen">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('ground floor room_1.jpeg')">
+                        <img src="ground floor room_1.jpeg" alt="Ground Floor Room">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('chimney_1.jpeg')">
+                        <img src="chimney_1.jpeg" alt="Chimney">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('bathroom_3.jpeg')">
+                        <img src="bathroom_3.jpeg" alt="Bathroom">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('staircase_1.jpeg')">
+                        <img src="staircase_1.jpeg" alt="Staircase">
+                    </div>
+                    <div class="gallery-item" onclick="openModal('upper floor room_1.jpeg')">
+                        <img src="upper floor room_1.jpeg" alt="Upper Floor Room">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="activities" class="activities-section">
+            <div class="container">
+                <h2>Local areas to visit and activities</h2>
+                <p>Discover the beautiful Basque Country region with its rich culture, stunning landscapes, and delicious cuisine.</p>
+                <p>Coming soon: Detailed information about local attractions, hiking trails, cultural sites, and recommended activities.</p>
+            </div>
+        </section>
+
+        <section id="practical" class="practical-section">
+            <div class="container">
+                <h2>Practical information for your stay</h2>
+                <p>Chantal and Robert will be your concierge for your stay. They will welcome you on the day of your arrival and stand at your disposal for any needs you may have.</p>
+                <p class="address">📍 Address: 794 Route de Serres, 64310 Ascain</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="image-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <img id="modal-image" src="" alt="Gallery Image">
+        </div>
+    </div>
+
+    <footer style="background: var(--primary); color: white; padding: 30px 0; text-align: center;">
+        <div class="container">
+            <p>© 2025 Etchevertzia | Family Home in the Basque Country</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                For inquiries: <a href="mailto:mdecarbo@pm.me" style="color: var(--accent);">mdecarbo@pm.me</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const today = new Date();
+        let currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        let events = [];
+        events.push({ date: new Date(2025, 6, 15), title: "Family Gathering", type: "booked", description: "Annual family reunion" });
+        events.push({ date: new Date(2025, 6, 20), title: "Available", type: "available", description: "House available for booking" });
+        events.push({ date: new Date(2025, 6, 25), title: "Garden Maintenance", type: "maintenance", description: "Regular garden care" });
+
+        function formatLocalDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function parseLocalDate(value) {
+            const [year, month, day] = value.split('-').map(Number);
+            return new Date(year, month - 1, day);
+        }
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('calendar-title').textContent = `${monthNames[month]} ${year}`;
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startingDay = firstDay.getDay();
+            const totalDays = lastDay.getDate();
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            let calendarHTML = '';
+            for (let i = 0; i < startingDay; i++) calendarHTML += '<div class="calendar-day empty"></div>';
+            for (let day = 1; day <= totalDays; day++) {
+                const date = new Date(year, month, day);
+                const isToday = date.getTime() === today.getTime();
+                const dayEvents = events.filter(event => event.date.getDate() === day && event.date.getMonth() === month && event.date.getFullYear() === year);
+                let eventHTML = '';
+                if (dayEvents.length > 0) {
+                    dayEvents.forEach(event => {
+                        const eventClass = event.type === 'booked' ? 'calendar-event booked' : event.type === 'available' ? 'calendar-event available' : 'calendar-event';
+                        eventHTML += `<div class="${eventClass}" title="${event.description}">${event.title}</div>`;
+                    });
+                }
+                let dayClass = isToday ? 'calendar-day today' : 'calendar-day';
+                if (dayEvents.length > 0) dayClass += ' has-event';
+                calendarHTML += `<div class="${dayClass}" data-date="${formatLocalDate(date)}"><div class="calendar-day-number">${day}</div>${eventHTML ? '<div class="calendar-day-events">' + eventHTML + '</div>' : ''}</div>`;
+            }
+            const totalCells = startingDay + totalDays;
+            const remainingCells = 42 - totalCells;
+            for (let i = 0; i < remainingCells; i++) calendarHTML += '<div class="calendar-day empty"></div>';
+            document.getElementById('calendar-days').innerHTML = calendarHTML;
+            document.querySelectorAll('.calendar-day:not(.empty)').forEach(dayElement => {
+                dayElement.addEventListener('click', function() {
+                    const dateStr = this.getAttribute('data-date');
+                    const date = parseLocalDate(dateStr);
+                    const dayEvents = events.filter(event => event.date.toDateString() === date.toDateString());
+                    if (dayEvents.length > 0) alert(`Events on ${date.toDateString()}:\n\n${dayEvents.map(e => `- ${e.title}: ${e.description}`).join('\n')}`);
+                });
+            });
+        }
+
+        document.getElementById('prev-month').addEventListener('click', function() { currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1); renderCalendar(); });
+        document.getElementById('next-month').addEventListener('click', function() { currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1); renderCalendar(); });
+        document.getElementById('today-btn').addEventListener('click', function() { currentDate = new Date(today.getFullYear(), today.getMonth(), 1); renderCalendar(); });
+        const bookingArrivalInput = document.getElementById('booking-arrival');
+        const bookingDepartureInput = document.getElementById('booking-departure');
+        const bookingForm = document.getElementById('booking-request-form');
+
+        document.getElementById('add-event-btn').addEventListener('click', function() {
+            document.getElementById('event-form').style.display = 'block';
+            const firstAvailableDate = currentDate.getFullYear() === today.getFullYear() && currentDate.getMonth() === today.getMonth()
+                ? today
+                : currentDate;
+            bookingArrivalInput.min = formatLocalDate(today);
+            bookingArrivalInput.value = formatLocalDate(firstAvailableDate);
+            bookingDepartureInput.min = formatLocalDate(new Date(firstAvailableDate.getFullYear(), firstAvailableDate.getMonth(), firstAvailableDate.getDate() + 1));
+            bookingDepartureInput.value = bookingDepartureInput.min;
+        });
+        bookingArrivalInput.addEventListener('change', function() {
+            if (!bookingArrivalInput.value) return;
+            const earliestDeparture = new Date(parseLocalDate(bookingArrivalInput.value).getTime());
+            earliestDeparture.setDate(earliestDeparture.getDate() + 1);
+            const earliestDepartureValue = formatLocalDate(earliestDeparture);
+            bookingDepartureInput.min = earliestDepartureValue;
+            if (!bookingDepartureInput.value || bookingDepartureInput.value < earliestDepartureValue) {
+                bookingDepartureInput.value = earliestDepartureValue;
+            }
+        });
+        document.getElementById('cancel-event').addEventListener('click', function() { document.getElementById('event-form').style.display = 'none'; });
+        bookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!bookingForm.reportValidity()) return;
+
+            const arrival = parseLocalDate(bookingArrivalInput.value);
+            const departure = parseLocalDate(bookingDepartureInput.value);
+            if (departure <= arrival) {
+                alert('Please choose a departure date after your arrival date.');
+                bookingDepartureInput.focus();
+                return;
+            }
+
+            const subject = `Booking request: ${bookingForm.elements['booking-name'].value.trim()}`;
+            const message = [
+                'Booking request for Etchevertzia',
+                '',
+                `Name: ${bookingForm.elements['booking-name'].value.trim()}`,
+                `Email: ${bookingForm.elements['booking-email'].value.trim()}`,
+                `Arrival: ${bookingArrivalInput.value}`,
+                `Departure: ${bookingDepartureInput.value}`,
+                '',
+                'Message:',
+                bookingForm.elements['booking-message'].value.trim() || '(No additional message)'
+            ].join('\n');
+
+            window.location.href = `mailto:mdecarbo@pm.me?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+        });
+
+        function loadEventsFromStorage() {
+            const storedEvents = localStorage.getItem('etchevertzia-events');
+            if (storedEvents) events = JSON.parse(storedEvents).map(event => { return { ...event, date: new Date(event.date) }; });
+        }
+
+        function openModal(imageSrc) { document.getElementById('modal-image').src = imageSrc; document.getElementById('image-modal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeModal() { document.getElementById('image-modal').classList.remove('active'); document.body.style.overflow = ''; }
+        document.getElementById('image-modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+        const gallery = document.getElementById('gallery-grid');
+        function scrollGallery(direction) {
+            const firstItem = gallery.querySelector('.gallery-item');
+            if (!firstItem) return;
+            const gap = parseFloat(getComputedStyle(gallery).columnGap) || 0;
+            gallery.scrollBy({ left: direction * (firstItem.getBoundingClientRect().width + gap), behavior: 'smooth' });
+        }
+        document.getElementById('gallery-prev').addEventListener('click', function() { scrollGallery(-1); });
+        document.getElementById('gallery-next').addEventListener('click', function() { scrollGallery(1); });
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        loadEventsFromStorage();
+        renderCalendar();
+    </script>
+</body>
+</html>
